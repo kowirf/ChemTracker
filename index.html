@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ChemTracker Mobile | Kowir</title>
+    <title>ChemTracker Pro | Mobile Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -17,53 +17,60 @@
         .bg-maroon { background-color: #800000; }
         .text-maroon { color: #800000; }
         
-        /* Navigasi Aktif untuk Mobile */
         .mobile-nav-active { color: #800000 !important; transform: translateY(-5px); transition: all 0.3s; }
-        .mobile-nav-active i { background: #fff1f1; padding: 10px; rounded-radius: 15px; }
+        .mobile-nav-active i { background: #fff1f1; padding: 10px; border-radius: 15px; }
 
         .tab-content { display: none; animation: slideIn 0.3s ease-out; }
         .tab-content.active { display: block; }
         
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Sembunyikan Scrollbar tapi tetap bisa scroll */
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="min-h-screen pb-24">
 
     <header class="p-6 bg-white border-b border-gray-100 sticky top-0 z-40 flex justify-between items-center">
         <div>
-            <h1 class="text-xl font-extrabold text-gray-900 tracking-tight" id="header-title">Home</h1>
+            <h1 class="text-xl font-extrabold text-gray-900 tracking-tight" id="header-title">Dashboard</h1>
             <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest" id="real-date"></p>
         </div>
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-maroon text-white flex items-center justify-center font-bold shadow-lg shadow-red-100">K</div>
-        </div>
+        <div class="w-10 h-10 rounded-2xl bg-maroon text-white flex items-center justify-center font-bold shadow-lg shadow-red-100">K</div>
     </header>
 
     <main class="p-4 space-y-6">
 
         <section id="dashboard" class="tab-content active space-y-6">
-            <div class="bg-white p-5 rounded-[2rem] shadow-sm border border-gray-50 flex items-center justify-between">
-                <div class="space-y-1">
-                    <p class="text-[10px] font-black text-gray-300 uppercase tracking-widest">Your Progress</p>
-                    <h2 class="text-3xl font-black text-gray-800" id="task-ratio">0/0</h2>
-                    <p class="text-[10px] font-bold text-green-500 uppercase italic">Great Work, Kowir!</p>
+            
+            <div class="grid grid-cols-1 gap-4">
+                <div class="bg-white p-5 rounded-[2rem] shadow-sm border border-gray-50 flex items-center justify-between">
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-black text-gray-300 uppercase tracking-widest">Progress</p>
+                        <h2 class="text-3xl font-black text-gray-800" id="task-ratio">0/0</h2>
+                        <p class="text-[9px] font-bold text-maroon uppercase italic">Keep pushing, Kowir!</p>
+                    </div>
+                    <div class="w-20 h-20"><canvas id="progressChart"></canvas></div>
                 </div>
-                <div class="w-20 h-20"><canvas id="progressChart"></canvas></div>
+
+                <div class="bg-maroon p-6 rounded-[2rem] shadow-xl text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <p class="text-red-200 text-[10px] font-black uppercase tracking-widest mb-2 text-center">Busy Level (Next 7 Days)</p>
+                        <div class="h-32 w-full">
+                            <canvas id="busyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-50">
-                <h3 class="font-black text-sm mb-4 flex items-center gap-2">
-                    <span class="w-1 h-5 bg-maroon rounded-full"></span> Add New Activity
+                <h3 class="font-black text-sm mb-4 flex items-center gap-2 text-gray-800">
+                    <i class="fas fa-plus-circle text-maroon"></i> Add Activity
                 </h3>
                 <form id="activity-form" class="space-y-3">
-                    <input type="text" id="title" required placeholder="Nama tugas kuliah..." class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-red-50 text-sm font-semibold transition">
+                    <input type="text" id="title" required placeholder="Nama Tugas/Praktikum..." class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-red-50 text-sm font-semibold transition">
                     <div class="grid grid-cols-2 gap-2">
                         <select id="category" class="bg-gray-50 p-4 rounded-2xl outline-none text-xs font-bold text-gray-500">
                             <option value="Kuliah">📚 Kuliah</option>
@@ -72,50 +79,33 @@
                         </select>
                         <input type="datetime-local" id="deadline" required class="bg-gray-50 p-4 rounded-2xl outline-none text-[10px] font-bold text-gray-500">
                     </div>
-                    <button type="submit" class="w-full bg-maroon text-white font-black py-4 rounded-2xl shadow-xl shadow-red-50 active:scale-95 transition">CREATE TASK</button>
+                    <button type="submit" class="w-full bg-maroon text-white font-black py-4 rounded-2xl shadow-xl shadow-red-50 active:scale-95 transition">SIMPAN AGENDA</button>
                 </form>
             </div>
 
             <div class="space-y-4">
-                <h3 class="font-black text-sm px-2">Recent Tasks</h3>
-                <div id="activity-list" class="space-y-3">
-                    </div>
-            </div>
-        </section>
-
-        <section id="courses" class="tab-content space-y-4">
-            <h2 class="text-xl font-black px-2">My Courses</h2>
-            <div class="space-y-3">
-                <div class="bg-white p-5 rounded-3xl border border-gray-100 flex justify-between items-center">
-                    <div><h4 class="font-bold text-sm">Kimia Organik</h4><p class="text-[10px] text-gray-400">4 SKS • Ruang 106</p></div>
-                    <i class="fas fa-flask text-maroon opacity-20 text-2xl"></i>
+                <div class="flex justify-between items-center px-2">
+                    <h3 class="font-black text-sm">Recent Tasks</h3>
+                    <span class="text-[9px] font-bold text-maroon bg-red-50 px-3 py-1 rounded-full uppercase" id="active-count">0 Aktif</span>
                 </div>
-                <div class="bg-white p-5 rounded-3xl border border-gray-100 flex justify-between items-center">
-                    <div><h4 class="font-bold text-sm">Praktikum Kimdas</h4><p class="text-[10px] text-gray-400">4 SKS • Lab. Lantai 8</p></div>
-                    <i class="fas fa-vial text-maroon opacity-20 text-2xl"></i>
-                </div>
+                <div id="activity-list" class="space-y-3"></div>
             </div>
         </section>
 
         <section id="history" class="tab-content space-y-4">
-            <h2 class="text-xl font-black px-2">History</h2>
-            <div id="history-list" class="space-y-3">
-                </div>
+            <h2 class="text-xl font-black px-2">Activity History</h2>
+            <div id="history-list" class="space-y-3"></div>
         </section>
 
     </main>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-lg">
         <button onclick="switchTab('dashboard', this)" class="nav-btn mobile-nav-active flex flex-col items-center gap-1 transition-all">
             <i class="fas fa-th-large text-lg"></i>
             <span class="text-[8px] font-black uppercase tracking-tighter">Home</span>
         </button>
-        <button onclick="switchTab('courses', this)" class="nav-btn text-gray-300 flex flex-col items-center gap-1 transition-all">
-            <i class="fas fa-graduation-cap text-lg"></i>
-            <span class="text-[8px] font-black uppercase tracking-tighter">Courses</span>
-        </button>
         <button onclick="switchTab('history', this)" class="nav-btn text-gray-300 flex flex-col items-center gap-1 transition-all">
-            <i class="fas fa-history text-lg"></i>
+            <i class="fas fa-check-double text-lg"></i>
             <span class="text-[8px] font-black uppercase tracking-tighter">History</span>
         </button>
     </nav>
@@ -124,20 +114,18 @@
         let activities = JSON.parse(localStorage.getItem('m_tasks')) || [];
         let historyData = JSON.parse(localStorage.getItem('m_history')) || [];
 
-        // Tab Switcher
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('mobile-nav-active', 'text-maroon'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.add('text-gray-300'));
-            
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('mobile-nav-active');
-            btn.classList.remove('text-gray-300');
-            
-            document.getElementById('header-title').innerText = tabId.charAt(0).toUpperCase() + tabId.slice(1);
+        // --- NOTIFICATION PERMISSION ---
+        if ("Notification" in window) {
+            Notification.requestPermission();
         }
 
-        // Progress Chart
+        function notify(title, msg) {
+            if (Notification.permission === "granted") {
+                new Notification(title, { body: msg, icon: "https://cdn-icons-png.flaticon.com/512/3534/3534033.png" });
+            }
+        }
+
+        // --- CHARTS ---
         const ctxP = document.getElementById('progressChart').getContext('2d');
         let progressChart = new Chart(ctxP, {
             type: 'doughnut',
@@ -145,20 +133,43 @@
             options: { cutout: '80%', plugins: { tooltip: { enabled: false } } }
         });
 
+        const ctxB = document.getElementById('busyChart').getContext('2d');
+        let busyChart = new Chart(ctxB, {
+            type: 'bar',
+            data: {
+                labels: ['Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb', 'Mg'],
+                datasets: [{ data: [1, 1, 1, 1, 1, 1, 1], backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: 8 }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#ffffff', font: { size: 10, weight: 'bold' } }, grid: { display: false } } } }
+        });
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.add('text-gray-300'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('mobile-nav-active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('mobile-nav-active');
+            btn.classList.remove('text-gray-300');
+            document.getElementById('header-title').innerText = tabId.charAt(0).toUpperCase() + tabId.slice(1);
+        }
+
         function render() {
             const list = document.getElementById('activity-list');
             const hList = document.getElementById('history-list');
             list.innerHTML = '';
             hList.innerHTML = '';
 
+            activities.sort((a,b) => new Date(a.deadline) - new Date(b.deadline));
+
             activities.forEach((task, i) => {
                 list.insertAdjacentHTML('beforeend', `
-                    <div class="bg-white p-4 rounded-3xl flex items-center justify-between border border-gray-50 shadow-sm animate-fade-in">
+                    <div class="bg-white p-4 rounded-[1.5rem] flex items-center justify-between border border-gray-50 shadow-sm">
                         <div class="flex items-center gap-4">
-                            <button onclick="completeTask(${i})" class="w-10 h-10 rounded-2xl bg-red-50 text-maroon flex items-center justify-center shadow-inner"><i class="fas fa-check text-xs"></i></button>
+                            <button onclick="completeTask(${i})" class="w-10 h-10 rounded-xl bg-red-50 text-maroon flex items-center justify-center shadow-inner"><i class="fas fa-check text-xs"></i></button>
                             <div>
                                 <h4 class="font-bold text-gray-800 text-sm">${task.title}</h4>
-                                <p class="text-[9px] text-gray-400 font-black uppercase tracking-tighter">${task.category}</p>
+                                <p class="text-[9px] text-gray-400 font-black uppercase tracking-tighter">${task.category} • ${new Date(task.deadline).toLocaleDateString('id-ID', {day:'numeric', month:'short'})}</p>
                             </div>
                         </div>
                         <button onclick="deleteTask(${i})" class="text-gray-200 p-2"><i class="fas fa-trash-alt text-xs"></i></button>
@@ -184,23 +195,43 @@
         function updateStats() {
             const total = activities.length + historyData.length;
             document.getElementById('task-ratio').innerText = `${historyData.length}/${total}`;
+            document.getElementById('active-count').innerText = `${activities.length} Aktif`;
+            
             progressChart.data.datasets[0].data = [historyData.length, activities.length || 1];
             progressChart.update();
+
+            // Update Busy Chart
+            const counts = [0,0,0,0,0,0,0];
+            activities.forEach(t => {
+                let d = new Date(t.deadline).getDay();
+                counts[d === 0 ? 6 : d-1]++;
+            });
+            busyChart.data.datasets[0].data = counts.map(v => v + 1);
+            busyChart.update();
+
             localStorage.setItem('m_tasks', JSON.stringify(activities));
             localStorage.setItem('m_history', JSON.stringify(historyData));
         }
 
-        window.completeTask = (i) => { historyData.unshift(activities.splice(i, 1)[0]); render(); }
-        window.undoTask = (i) => { activities.push(historyData.splice(i, 1)[0]); render(); }
+        window.completeTask = (i) => {
+            const task = activities.splice(i, 1)[0];
+            historyData.unshift(task);
+            notify("Tugas Selesai! 🎉", `Mantap! "${task.title}" sudah beres.`);
+            render();
+        }
+
+        window.undoTask = (i) => { historyData.splice(i, 1); activities.push(historyData[0]); render(); }
         window.deleteTask = (i) => { activities.splice(i, 1); render(); }
 
         document.getElementById('activity-form').addEventListener('submit', (e) => {
             e.preventDefault();
+            const title = document.getElementById('title').value;
             activities.push({
-                title: document.getElementById('title').value,
+                title: title,
                 category: document.getElementById('category').value,
                 deadline: document.getElementById('deadline').value
             });
+            notify("Tugas Baru 📚", `"${title}" berhasil ditambahkan.`);
             e.target.reset(); render();
         });
 
